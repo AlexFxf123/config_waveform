@@ -65,13 +65,17 @@ modify_offset_code_words1 = ['A0','10','00','00',
                              '00','00','00','00']
 ddm_words.append(modify_offset_code_words1)
 
+# 循环操作码，设置循环次数，0x0180->384,0x000C->12,0x0020->32
+loop_code_words1 = ['E0','01','00','20']                    # 循环操作码，开始循环，外部循环
+ddm_words.append(loop_code_words1)
+
 # 修改相位操作码1，用于设置初始相位
 modify_phase_code_words1 =  ['B1','00','04','00',           # 修改相位操作码，设置初始相位，15~16
                             '01','00','04','00']
 ddm_words.append(modify_phase_code_words1)
 
-# 循环操作码，设置循环次数
-loop_code_words1 = ['E0','01','01','80']                    # 循环操作码，开始循环，17
+# 循环操作码，设置循环次数，0x0180->384,0x000C->12,0x0020->32
+loop_code_words1 = ['E0','01','00','0C']                    # 循环操作码，开始循环，内部循环
 ddm_words.append(loop_code_words1)
 
 # 预负载段，设置时长，起始频率和调频斜率
@@ -156,7 +160,11 @@ hd.copyData(wait_seg_code_words2, wait_time_hex, 4)
 ddm_words.append(wait_seg_code_words2)
 
 # 循环结束
-loop_code_words2 = ['E0','02','00','00']                    # 循环操作码，结束循环，44
+loop_code_words2 = ['E0','02','00','00']                    # 循环操作码，结束内部循环
+ddm_words.append(loop_code_words2)
+
+# 循环结束
+loop_code_words2 = ['E0','02','00','00']                    # 循环操作码，结束外部循环
 ddm_words.append(loop_code_words2)
 
 # 等待段，设置时长
