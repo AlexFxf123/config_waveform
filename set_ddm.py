@@ -4,12 +4,13 @@ import numpy as np
 
 # 设置参数，t0~t6,slope1,slope2,NSTART
 # 这一组对应0.2m分辨率,512个采样点，384个chirp，注意修改采样数和chirp数
-t_config = [20, 4, 20.48, 2, 6.62, 3.2, 1]            # 0.2m
+t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
 slope1 = 36.5
-primary_file_name = "ddm_0.2m_512_384_test_primary.dat"
-secondary_file_name = "ddm_0.2m_512_384_test_secondary.dat"
+primary_file_name = "ddm_0.2m_512_384_primary.dat"
+secondary_file_name = "ddm_0.2m_512_384_secondary.dat"
 # 这一组对应0.4m分辨率，512个采样点，384个chirp，注意修改采样数和chirp数
-# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.4m
+# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.4m，这种配置有问题，需要提高发射带宽
+# t_config = [20, 20, 20.48, 0.48, 10.24, 3.2, 1]       # 0.4m，这种配置可以正常工作，相当于增益带宽积不变情况下增加带宽降低增益
 # slope1 = 18.5
 # primary_file_name = "ddm_0.4m_512_384_primary.dat"
 # secondary_file_name = "ddm_0.4m_512_384_secondary.dat"
@@ -52,13 +53,17 @@ wait_time_hex = hd.writeConfigValue(hex(NTIME))
 hd.copyData(wait_seg_code_words1, wait_time_hex, 4)
 ddm_words.append(wait_seg_code_words1)
 
+# 循环操作码，设置循环次数，0x0180->384,0x000C->12,0x0020->32
+loop_code_words1 = ['E0','01','00','20']                    # 循环操作码，开始循环，外部循环
+ddm_words.append(loop_code_words1)
+
 # 修改相位操作码1，用于设置初始相位
 modify_phase_code_words1 =  ['B1','00','04','00',           # 修改相位操作码，设置初始相位，15~16
                             '01','00','04','00']
 ddm_words.append(modify_phase_code_words1)
 
-# 循环操作码，设置循环次数
-loop_code_words1 = ['E0','01','01','80']                    # 循环操作码，开始循环，17
+# 循环操作码，设置循环次数，0x0180->384,0x000C->12,0x0020->32
+loop_code_words1 = ['E0','01','00','0C']                    # 循环操作码，开始循环，内部循环
 ddm_words.append(loop_code_words1)
 
 # 预负载段，设置时长，起始频率和调频斜率
@@ -135,7 +140,11 @@ hd.copyData(wait_seg_code_words2, wait_time_hex, 4)
 ddm_words.append(wait_seg_code_words2)
 
 # 循环结束
-loop_code_words2 = ['E0','02','00','00']                    # 循环操作码，结束循环，44
+loop_code_words2 = ['E0','02','00','00']                    # 循环操作码，结束内部循环
+ddm_words.append(loop_code_words2)
+
+# 循环结束
+loop_code_words2 = ['E0','02','00','00']                    # 循环操作码，结束外部循环
 ddm_words.append(loop_code_words2)
 
 # 等待段，设置时长
