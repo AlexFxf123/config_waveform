@@ -1,18 +1,18 @@
 import header as hd
 import numpy as np
-# 配置基础DDM波形，修改TX、RX的增益和滤波器设置（设置为5/4有效），修改循环次数(后续采样这种方式)
+# 配置基础DDM波形，修改滤波器设置（设置为5/4有效），修改循环次数(后续采样这种方式)
 
 # 设置参数，t0~t6,slope1,slope2,NSTART
 # 这一组对应0.2m分辨率,512个采样点，384个chirp，注意修改采样数和chirp数
 t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
 slope1 = 36.5
-primary_file_name = "ddm_0.2m_512_384_hp_rx_primary.dat"
-secondary_file_name = "ddm_0.2m_512_384_hp_rx_secondary.dat"
+primary_file_name = "ddm_0.2m_512_384_hp_primary.dat"
+secondary_file_name = "ddm_0.2m_512_384_hp_secondary.dat"
 # 这一组对应0.4m分辨率，512个采样点，384个chirp，注意修改采样数和chirp数
 # t_config = [20, 20, 20.48, 0.48, 10.24, 3.2, 1]            # 0.4m
 # slope1 = 22
-# primary_file_name = "ddm_0.4m_512_384_hp_rx_primary.dat"
-# secondary_file_name = "ddm_0.4m_512_384_hp_rx_secondary.dat"
+# primary_file_name = "ddm_0.4m_512_384_hp_primary.dat"
+# secondary_file_name = "ddm_0.4m_512_384_hp_secondary.dat"
 
 NSTEP1 = hd.calSlope(slope1)
 NSTEP2 = -4*NSTEP1
@@ -45,7 +45,7 @@ wait_seg_code_words1 = ['47','80','00','00',                # 等待段分段操
                         '03','80','A3','D0',                # 参数，NSTART，11
                         '00','00','00','00',                # 参数，NSTEP，12
                         '00','B1','00','0F',                # 参数，CONFIG0，13，HP2/1频率设置为5/4
-                        '10','01','E0','0F']                # 参数，CONFIG1，14，rx=0dB，update=1
+                        '10','01','C0','0F']                # 参数，CONFIG1，14，rx=0dB，update=0
 wait_time = t_config[0]                                     # 20us，t0
 NTIME = hd.calTime(wait_time)
 wait_time_hex = hd.writeConfigValue(hex(NTIME))
@@ -116,7 +116,7 @@ fb_seg_code_words = ['47','00','00','00',                   # 返回负载段分
                      '00','00','00','C8',                   # 参数，NTIME，31
                      '3D','99','98','00',                   # 参数，NSTEP，32
                      '00','B0','00','0F',                   # 参数，CONFIG0，33，HP2/1频率设置为5/4
-                     '10','01','E0','0F']                   # 参数，CONFIG1，34，rx=0dB，update=1
+                     '10','01','C0','0F']                   # 参数，CONFIG1，34，rx=0dB，update=0
 fb_time = t_config[4]                                       # t4
 NTIME = hd.calTime(fb_time)
 fb_time_hex = hd.writeConfigValue(hex(NTIME))
@@ -131,7 +131,7 @@ wait_seg_code_words2 = ['47','00','00','00',                # 等待段分段操
                         '00','00','02','5C',                # 参数，NTIME，36
                         '00','00','00','00',                # 参数，NSTEP，37
                         '00','B0','00','0F',                # 参数，CONFIG0，38，HP2/1频率设置为5/4
-                        '10','01','E0','0F']                # 参数，CONFIG1，39，rx=0dB，update=1
+                        '10','01','C0','0F']                # 参数，CONFIG1，39，rx=0dB，update=0
 wait_time = t_config[5]                                     # t5
 NTIME = hd.calTime(wait_time)
 wait_time_hex = hd.writeConfigValue(hex(NTIME))
