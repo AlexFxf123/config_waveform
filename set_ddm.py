@@ -1,5 +1,4 @@
 import header as hd
-import numpy as np
 # 配置基础DDM波形，使用两次循环配置移相码(后续均采样这种方式)
 
 # 设置参数，t0~t6,slope1,slope2,NSTART

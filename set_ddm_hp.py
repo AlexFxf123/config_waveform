@@ -1,5 +1,4 @@
 import header as hd
-import numpy as np
 # 配置基础DDM波形，修改滤波器设置（设置为5/4有效），修改循环次数(后续采样这种方式)
 
 # 设置参数，t0~t6,slope1,slope2,NSTART

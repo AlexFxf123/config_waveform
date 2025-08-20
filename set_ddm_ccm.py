@@ -1,5 +1,4 @@
 import header as hd
-import numpy as np
 # 配置DDM-CCM波形
 
 # 设置参数，t0~t6,slope1,slope2,NSTART，freq_offset
