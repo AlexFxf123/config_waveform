@@ -3,16 +3,16 @@ import header as hd
 
 # 设置参数，t0~t6,slope1,slope2,NSTART
 # 这一组对应0.2m分辨率,512个采样点，384个chirp，注意修改采样数和chirp数
-t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
-slope1 = 36.5
-primary_file_name = "ddm_0.2m_512_384_primary.dat"
-secondary_file_name = "ddm_0.2m_512_384_secondary.dat"
+# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
+# slope1 = 36.5
+# primary_file_name = "ddm_0.2m_512_384_primary.dat"
+# secondary_file_name = "ddm_0.2m_512_384_secondary.dat"
 # 这一组对应0.4m分辨率，512个采样点，384个chirp，注意修改采样数和chirp数
-# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.4m，这种配置有问题，需要提高发射带宽
+t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.4m，这种配置有问题，需要提高发射带宽
 # t_config = [20, 20, 20.48, 0.48, 10.24, 3.2, 1]       # 0.4m，这种配置可以正常工作，相当于增益带宽积不变情况下增加带宽降低增益
-# slope1 = 18.5
-# primary_file_name = "ddm_0.4m_512_384_primary.dat"
-# secondary_file_name = "ddm_0.4m_512_384_secondary.dat"
+slope1 = 20
+primary_file_name = "ddm_0.4m_512_384_primary.dat"
+secondary_file_name = "ddm_0.4m_512_384_secondary.dat"
 
 NSTEP1 = hd.calSlope(slope1)
 NSTEP2 = -4*NSTEP1
