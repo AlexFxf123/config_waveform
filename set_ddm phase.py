@@ -1,18 +1,12 @@
 import header as hd
-# 配置基础DDM波形，使用两次循环配置移相码(后续均采样这种方式)，使用不同子带和相位码
+# 配置基础DDM波形，使用两次循环配置移相码(后续均采样这种方式)，使用8个子带和相位码（或配成同样的相位码），8个子带配置成加移向值
 
 # 设置参数，t0~t6,slope1,slope2,NSTART
 # 这一组对应0.2m分辨率,512个采样点，384个chirp，注意修改采样数和chirp数
 t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
 slope1 = 36.5
-primary_file_name = "ddm_0.2m_512_384_phase_8_primary.dat"
-secondary_file_name = "ddm_0.2m_512_384_phase_8_secondary.dat"
-# 这一组对应0.4m分辨率，512个采样点，384个chirp，注意修改采样数和chirp数
-# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.4m，这种配置有问题，需要提高发射带宽
-# t_config = [20, 20, 20.48, 0.48, 10.24, 3.2, 1]       # 0.4m，这种配置可以正常工作，相当于增益带宽积不变情况下增加带宽降低增益
-# slope1 = 18.5
-# primary_file_name = "ddm_0.4m_512_384_primary.dat"
-# secondary_file_name = "ddm_0.4m_512_384_secondary.dat"
+primary_file_name = "ddm_0.2m_512_256_phase_8_test_primary.dat"
+secondary_file_name = "ddm_0.2m_512_256_phase_8_test_secondary.dat"
 
 NSTEP1 = hd.calSlope(slope1)
 NSTEP2 = -4*NSTEP1
@@ -52,7 +46,7 @@ wait_time_hex = hd.writeConfigValue(hex(NTIME))
 hd.copyData(wait_seg_code_words1, wait_time_hex, 4)
 ddm_words.append(wait_seg_code_words1)
 
-# 循环操作码，设置循环次数，0x0180->384,0x000C->12,0x0020->32
+# 循环操作码，设置循环次数，0x0180->384,0x0008->8,0x0020->32
 loop_code_words1 = ['E0','01','00','20']                    # 循环操作码，开始循环，外部循环
 ddm_words.append(loop_code_words1)
 
@@ -61,8 +55,8 @@ modify_phase_code_words1 =  ['B1','00','04','00',           # 修改相位操作
                             '01','00','04','00']
 ddm_words.append(modify_phase_code_words1)
 
-# 循环操作码，设置循环次数，0x0180->384,0x000C->12,0x0020->32
-loop_code_words1 = ['E0','01','00','0C']                    # 循环操作码，开始循环，内部循环
+# 循环操作码，设置循环次数，0x0180->384,0x0008->8,0x0020->32
+loop_code_words1 = ['E0','01','00','08']                    # 循环操作码，开始循环，内部循环
 ddm_words.append(loop_code_words1)
 
 # 预负载段，设置时长，起始频率和调频斜率
@@ -84,10 +78,15 @@ slope1_hex = hd.writeConfigValue(hex(NSTEP1))
 hd.copyData(pre_seg_code_words, slope1_hex, 12)
 ddm_words.append(pre_seg_code_words)
 
-# 修改相位操作码2，用于设置每个chirp的循环相位码，这里分12个子带
-modify_phase_code_words2 = ['B2','05','44','00',            # 修改相位操作码，设置循环相位，24~25
-                            '02','10','08','2B']
-ddm_words.append(modify_phase_code_words2)
+# 修改相位操作码2，用于设置每个chirp的循环相位码，这里不分子带
+# modify_phase_code_words2 = ['B1','00','04','00',            # 修改相位操作码，设置循环相位，24~25
+#                             '01','00','04','00']
+
+# 修改相位操作码2，用于设置每个chirp的循环相位码，这里分8个子带
+# modify_phase_code_words2 = ['B2','08','04','00',            # 修改相位操作码，设置循环相位，24~25
+#                             '02','18','08','40']
+
+# ddm_words.append(modify_phase_code_words2)
 
 # 有效负载段，设置时长
 payload_seg_code_words = ['46','00','00','00',              # 有效负载段分段操作码，26~29
@@ -99,6 +98,12 @@ NTIME = hd.calTime(payload_time)
 payload_time_hex = hd.writeConfigValue(hex(NTIME))
 hd.copyData(payload_seg_code_words, payload_time_hex, 4)
 ddm_words.append(payload_seg_code_words)
+
+# 修改相位操作码2，用于设置每个chirp的循环相位码，这里分8个子带
+modify_phase_code_words2 = ['B2','08','04','00',            # 修改相位操作码，设置循环相位，24~25
+                            '02','18','08','40']
+ddm_words.append(modify_phase_code_words2)
+
 
 # 后负载段，设置时长
 post_seg_code_words =  ['46','00','00','00',                # 后负载段分段操作码，30~33
@@ -175,11 +180,11 @@ for i in range(0,len(secondary_list)):
     if secondary_list[i] == 'C4':
         secondary_list[i] = 'C0'                            # 同步方式与主雷达不同
     if secondary_list[i] == 'B2':
-        secondary_list[i+1] = '1A'                          # 从芯片相位设置
-        secondary_list[i+2] = 'C8'
-        secondary_list[i+3] = '55'
-        secondary_list[i+4] = '03'
-        secondary_list[i+5] = '1A'
-        secondary_list[i+6] = 'C8'
-        secondary_list[i+7] = '80'
+        secondary_list[i+1] = '28'                          # 从芯片相位设置
+        secondary_list[i+2] = '08'
+        secondary_list[i+3] = '80'
+        secondary_list[i+4] = '02'
+        secondary_list[i+5] = '38'
+        secondary_list[i+6] = '08'
+        secondary_list[i+7] = 'C0'
 hd.save_to_dat(secondary_file_name, secondary_list)
