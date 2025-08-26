@@ -9,17 +9,17 @@ import header as hd
 # primary_file_name = "ddm_ccm_0.45m_512_384_primary.dat"
 # secondary_file_name = "ddm_ccm_0.45m_512_384_secondary.dat"
 # 这一组对应0.6m分辨率，512个采样点，384个chirp，每个chirp跳频1.4M，注意修改采样数和chirp数
-# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            
-# slope1 = 12.5
-# freq_offset = 1.6
-# primary_file_name = "ddm_ccm_0.6m_512_384_primary.dat"
-# secondary_file_name = "ddm_ccm_0.6m_512_384_secondary.dat"
-# 这一组对应0.75m分辨率，512个采样点，384个chirp，每个chirp跳频1.6M，注意修改采样数和chirp数
 t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            
-slope1 = 10
-freq_offset = 1.8
-primary_file_name = "ddm_ccm_0.75m_512_384_primary.dat"
-secondary_file_name = "ddm_ccm_0.75m_512_384_secondary.dat"
+slope1 = 10                                                 # 斜率12.5有问题，但10则可以      
+freq_offset = 1.6
+primary_file_name = "ddm_ccm_0.6m_512_384_primary.dat"
+secondary_file_name = "ddm_ccm_0.6m_512_384_secondary.dat"
+# 这一组对应0.75m分辨率，512个采样点，384个chirp，每个chirp跳频1.6M，注意修改采样数和chirp数
+# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            
+# slope1 = 10
+# freq_offset = 1.8
+# primary_file_name = "ddm_ccm_0.75m_512_384_primary.dat"
+# secondary_file_name = "ddm_ccm_0.75m_512_384_secondary.dat"
 
 NSTEP1 = hd.calSlope(slope1)
 NSTEP2 = -4*NSTEP1
