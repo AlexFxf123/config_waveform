@@ -8,18 +8,20 @@ import header as hd
 # freq_offset = 1.5
 # primary_file_name = "ddm_ccm_0.45m_512_384_primary.dat"
 # secondary_file_name = "ddm_ccm_0.45m_512_384_secondary.dat"
+
 # 这一组对应0.6m分辨率，512个采样点，384个chirp，每个chirp跳频1.4M，注意修改采样数和chirp数
-t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            
-slope1 = 10                                                 # 斜率12.5有问题，但10则可以      
-freq_offset = 1.6
-primary_file_name = "ddm_ccm_0.6m_512_384_primary.dat"
-secondary_file_name = "ddm_ccm_0.6m_512_384_secondary.dat"
-# 这一组对应0.75m分辨率，512个采样点，384个chirp，每个chirp跳频1.6M，注意修改采样数和chirp数
 # t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            
-# slope1 = 10
-# freq_offset = 1.8
-# primary_file_name = "ddm_ccm_0.75m_512_384_primary.dat"
-# secondary_file_name = "ddm_ccm_0.75m_512_384_secondary.dat"
+# slope1 = 10                                                 # 斜率12.5有问题，但10则可以      
+# freq_offset = 1.6
+# primary_file_name = "ddm_ccm_0.6m_512_384_primary.dat"
+# secondary_file_name = "ddm_ccm_0.6m_512_384_secondary.dat"
+
+# 这一组对应0.732m分辨率，512个采样点，384个chirp，每个chirp跳频1.8M，注意修改采样数和chirp数
+t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            
+slope1 = 10
+freq_offset = 1.8
+primary_file_name = "ddm_ccm_0.732m_512_384_primary.dat"
+secondary_file_name = "ddm_ccm_0.732m_512_384_secondary.dat"
 
 NSTEP1 = hd.calSlope(slope1)
 NSTEP2 = -4*NSTEP1
@@ -121,8 +123,8 @@ hd.copyData(payload_seg_code_words, payload_time_hex, 4)
 ddm_words.append(payload_seg_code_words)
 
 # 修改相位操作码2，用于设置每个chirp的循环相位码，这里分12个子带
-modify_phase_code_words2 = ['B2','05','44','00',            # 修改相位操作码，设置循环相位，24~25
-                            '02','10','08','2B']
+modify_phase_code_words2 = ['B3','05','44','00',            # 修改相位操作码，设置循环相位，24~25
+                            '03','10','0C','2B']
 ddm_words.append(modify_phase_code_words2)
 
 # 后负载段，设置时长
@@ -199,12 +201,12 @@ secondary_list = primary_list
 for i in range(0,len(secondary_list)):
     if secondary_list[i] == 'C4':
         secondary_list[i] = 'C0'                            # 同步方式与主雷达不同
-    if secondary_list[i] == 'B2':
+    if secondary_list[i] == 'B3':
         secondary_list[i+1] = '1A'                          # 从芯片相位设置
-        secondary_list[i+2] = 'C8'
+        secondary_list[i+2] = 'CC'
         secondary_list[i+3] = '55'
-        secondary_list[i+4] = '03'
+        secondary_list[i+4] = '02'
         secondary_list[i+5] = '1A'
-        secondary_list[i+6] = 'C8'
+        secondary_list[i+6] = 'CC'
         secondary_list[i+7] = '80'
 hd.save_to_dat(secondary_file_name, secondary_list)
