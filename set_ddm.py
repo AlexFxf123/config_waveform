@@ -3,10 +3,10 @@ import header as hd
 
 # 设置参数，t0~t6,slope1,slope2,NSTART
 # 这一组对应0.2m分辨率,512个采样点，384个chirp，注意修改采样数和chirp数
-# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
-# slope1 = 36.5
-# primary_file_name = "ddm_0.2m_512_384_primary.dat"
-# secondary_file_name = "ddm_0.2m_512_384_secondary.dat"
+t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
+slope1 = 36.5
+primary_file_name = "ddm_0.2m_512_384_test_primary.dat"
+secondary_file_name = "ddm_0.2m_512_384_test_secondary.dat"
 
 # 这一组对应0.366m分辨率，512个采样点，384个chirp，注意修改采样数和chirp数
 # t_config = [20, 20, 20.48, 0.48, 10.24, 3.2, 1]       # 0.366m，这种配置可以正常工作，相当于增益带宽积不变情况下增加带宽降低增益
@@ -16,10 +16,10 @@ import header as hd
 # secondary_file_name = "ddm_0.366m_512_384_secondary.dat"
 
 # 这一组对应0.732m分辨率,512个采样点，384个chirp，注意修改采样数和chirp数
-t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
-slope1 = 10
-primary_file_name = "ddm_0.732m_512_384_primary.dat"
-secondary_file_name = "ddm_0.732m_512_384_secondary.dat"
+# t_config = [20, 2, 20.48, 2, 6.12, 3.2, 1]            # 0.2m
+# slope1 = 10
+# primary_file_name = "ddm_0.732m_512_384_primary.dat"
+# secondary_file_name = "ddm_0.732m_512_384_secondary.dat"
 
 NSTEP1 = hd.calSlope(slope1)
 NSTEP2 = -4*NSTEP1
@@ -190,8 +190,8 @@ for i in range(0,len(secondary_list)):
         secondary_list[i+1] = '1A'                          # 从芯片相位设置
         secondary_list[i+2] = 'CC'
         secondary_list[i+3] = '55'
-        secondary_list[i+4] = '02'
-        secondary_list[i+5] = '1A'
-        secondary_list[i+6] = 'CC'
+        secondary_list[i+4] = '03'
+        secondary_list[i+5] = '25'
+        secondary_list[i+6] = '4C'
         secondary_list[i+7] = '80'
 hd.save_to_dat(secondary_file_name, secondary_list)
